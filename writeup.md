@@ -44,13 +44,20 @@ Since these questions all measure qualitatively different opinions, the model wi
 To simulate the spread of vaccination behavior in a social network, this component will simulate a facebook social network using a modified Bianconi–Barabási network that has following characteristics. Due to limited computational resources, we assume that this survey full captures a complete and self-contained facebook social network.
 
 **Homophily:** People who are more demographically similar to each other are more likely to become friends with each other.
-- This will be implemented via a similarity matrix between each using euclidean distance of their demographics
+- This will be implemented via a similarity matrix between each based on the euclidean distance of their demographic characteristics.
 
 **Preferential Attachment:** People are more likely to make friends with people that are more popular.
-- To generate this Bianconi–Barabási network, . Each time we add a node, the probability of it connecting to node i is:
-$$p(i)
+
+To generate this Bianconi–Barabási network, . Each time we add a node *j*, the probability of it connecting to another node already in the network *i* is:
+$$p(i)=\frac{k(i)sim(i,j)}{\Sigma_i{p(i)}}$$
+- The denomenator normalizes it into a probability $p(i) \in [0,1]$.
+- $k(i)$ represents the number nodes already connected to *i*
+- $sim(i,j) \in [0,1]$ represents the homophily/similarity of the two node's demographic information based on mahalanobis distance. The formula used is:
+$$sim(i,j) = \frac{1}{\ln(mahl\_dist(i,j) + 1)+1}$$
 
 **Attitude Diffusion:** Each person begins by holding a set of attitudes about COVID vaccination based on their intrinsically-held views. They then influence (and are influenced by) their friends' attitudes.
+- Thus, after each period of time *t*, each node's new vaccination attitude is the mean of itself and its friends' attitudes. This process is repeated infinite times until each node's vaccination attitude converges to a stable value.
+- See Appendix A for the vectorized implementation of this algorithm.
 
 
 ## Modelling the Treatment Effect
@@ -59,3 +66,13 @@ $$p(i)
 ## Outcome Variable: vaccination
 The relationships assumed can be seen in the directed acyclic graph, using the same formulation
 $$p(j) = \Sigma_i{p(i)w(i,j)} + \beta + \epsilon$$
+
+
+## Appendieces
+
+### Appendix A: Vectorized Implementation of Vaccine Attitude Diffusion
+
+This section describes how the algorithm solves for the stable state of the network after the vaccination attitudes fully diffuse through the network.
+
+We want to find: $\lim{t \to \infty}A^t\vec{v}, where A is the adjacency matrix of the network and $\vec{v}$ is the vector representing the vaccination attitude of each person.
+- Each row is normalized, so that we find the mean of each
