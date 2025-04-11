@@ -7,11 +7,22 @@ def assign_block_treatment(this_network):
     # Get network community structure
     treatment_assignment_df = this_network.node_community.copy(deep=True).to_frame()
 
-    # Assign treatments to each community randomly and with equal probability
-    community_to_treatment = np.random.choice([None,'reason','emotion'],size=this_network.n_communities) 
+    # Assign treatments to each community
+    shuffled_communities = [i for i in range(0,this_network.n_communities)]
+    np.random.shuffle(shuffled_communities) # shuffle community number order
 
+    group_assignment = np.array([None for i in range(0,this_network.n_communities)])
+    group_assignment[0:int(this_network.n_communities/3)] = 'reason' # Assign reason to first 1/3
+    group_assignment[int(this_network.n_communities/3):int(2 * this_network.n_communities/3)] = 'emotion' # Assign emotion to second 1/3
+
+    # Map treatment status to each random community
+    community_to_treatment = pd.Series(dict(zip(shuffled_communities,group_assignment)))
+    community_to_treatment.name = 'treatment'
+    community_to_treatment.index.name = 'community'
+    
     # Assign treatment status to each unit within the communities
-    treatment_assignment_df['treatment'] = community_to_treatment[treatment_assignment_df['community']]
+    print(community_to_treatment[treatment_assignment_df['community']])
+    treatment_assignment_df['treatment'] = community_to_treatment[treatment_assignment_df['community']].reset_index(drop=True)
     treatment_assignment_df = pd.get_dummies(treatment_assignment_df,columns=['treatment'])
     return treatment_assignment_df
 
