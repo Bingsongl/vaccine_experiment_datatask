@@ -5,7 +5,7 @@ Simply run all the code cells of `main.ipynb` in the order written. The code wil
 - An overview of the data generation process can be found on this document but is implemented in `main.ipynb`.
 - The analysis, visualizations, and commentary of the generated data can be found on `main.ipynb`
 
-**Setting up the Environment:** If you already have a working python or Conda environment on your local machine, you may quickly install the packages used here, as listed in `requirements.txt`. Please see the [official guide](https://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/) more information on setting up an environment on a local machine.
+**Setting up the Environment:** If you already have a working python or Conda environment on your local machine, you may quickly install the packages used here, as listed in `requirements.txt`. Please see the [official guide](https://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/) more information on setting up the environment on a local machine.
 
 **Using Google Collab:** Alternatively, to run everything without installing an environment on your local machine, simply upload the entire repository folder to the root folder your google drive, open `main.ipynb` in [google collab](https://colab.research.google.com/), then uncomment and run the first cell to setup the google collab environment. Everything else will work in the same state.
 

@@ -11,7 +11,7 @@ def generate_weights(n,scaling=None):
 
 def generate_age(n_samples:int=5000):
     age_df = pd.read_csv('data/emperical_data/CDC_age_data.csv',index_col='Single-Year Ages Code')
-    age_df = age_df[age_df.index >= 18] # Don't include people less than 21 years old
+    age_df = age_df[age_df.index >= 18] # Don't include people less than 18 years old
     age_df = age_df/age_df.sum() # Normalize age distribution into probabilities
     return list(age_df.sample(n_samples,replace=True,weights='Population').index)
 
@@ -25,7 +25,7 @@ def generate_education(n_samples:int=5000):
     education_df['education'] = education_df['education'].str.replace(',','')
     education_df = education_df.astype('int')
 
-    # Normalize distribution and sample n from the distribution
+    # Normalize distribution and then draw n samples from the distribution
     education_df = education_df/education_df.sum()
     education_df = education_df.reset_index(drop=True) # Convert education to likert scale
     return list(education_df.sample(n_samples,replace=True,weights='education').index)
